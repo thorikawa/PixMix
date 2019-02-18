@@ -1,12 +1,8 @@
 #ifndef TRACKING_HH
-# define TRACKING_HH
+#define TRACKING_HH
 
-# include <iostream>
-# include <opencv/cv.h>
-# include <opencv/cvaux.h>
-# include <opencv/highgui.h>
-# include <opencv/cvwimage.h>
-
+#include <iostream>
+#include <opencv2/opencv.hpp>
 # include <cfloat>
 
 # define DBL_EPSILON     2.2204460492503131e-016
@@ -52,7 +48,7 @@ class Tracking
 		float tolerance_thres_;
 		cv::Mat3f gauss_img_;
 		Mat_v pyramid_image_;
-		std::vector<std::vector<cv::Point>> pyramid_rough_cont_;
+		std::vector<std::vector<cv::Point> > pyramid_rough_cont_;
 		Mat_v dissimilarity_piramid_;
 		unsigned int multiply_contours_;
 };

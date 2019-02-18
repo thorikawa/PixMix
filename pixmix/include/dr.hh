@@ -1,10 +1,6 @@
 #ifndef DR_HH
 # define DR_HH
-# include <opencv/cv.h>
-# include <opencv/cvaux.h>
-# include <opencv/highgui.h>
-# include <opencv/cvwimage.h>
-
+# include <opencv2/opencv.hpp>
 # include <list>
 # include <iostream>
 # include <time.h>

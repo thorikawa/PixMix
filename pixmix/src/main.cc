@@ -21,38 +21,12 @@ void mouseEvent(int evt, int x, int y, int flags, void *param)
 
 int main(int argc, char* argv[])
 {
-	bool manual = true;
-	std::string prefix("C:/Users/am237982/Desktop/cea/CEA/Alexandre/Dev/supermedia_inpaint/PixMix/pixmix/input/");
+	bool manual = false;
+	std::string prefix("/path/to/images/");
 
 	std::list<std::pair<char*, char*> > tests;
-	//tests.push_back(std::make_pair(strdup("1mask.png"), strdup("1.png")));
+	tests.push_back(std::make_pair(strdup("mask.png"), strdup("input.png")));
 	//tests.push_back(std::make_pair(strdup("2mask.png"), strdup("2.png")));
-	tests.push_back(std::make_pair(strdup("her2mask.png"), strdup("her2.png")));
-	tests.push_back(std::make_pair(strdup("her1mask.png"), strdup("her1.png")));
-	tests.push_back(std::make_pair(strdup("rock.png"), strdup("rock.png")));
-	tests.push_back(std::make_pair(strdup("chips.png"), strdup("chips.png")));
-	tests.push_back(std::make_pair(strdup("shield.png"), strdup("shield.png")));
-	tests.push_back(std::make_pair(strdup("pixmixex1_mask.png"), strdup("pixmixex1.png")));
-	tests.push_back(std::make_pair(strdup("pixmixex2_mask.png"), strdup("pixmixex2.png")));
-	tests.push_back(std::make_pair(strdup("pixmixex3_mask.png"), strdup("pixmixex3.png")));
-	tests.push_back(std::make_pair(strdup("tatoo_mask.jpg"), strdup("tatoo.jpg")));
-	tests.push_back(std::make_pair(strdup("fontainmask.png"), strdup("fontainreal.jpg")));
-	tests.push_back(std::make_pair(strdup("bungeemask.png"), strdup("bungeereal.jpg")));
-	//tests.push_back(std::make_pair(strdup("boat_mask.jpg"), strdup("boat.jpg")));
-	tests.push_back(std::make_pair(strdup("panneaumask.png"), strdup("panneau.jpg")));
-	tests.push_back(std::make_pair(strdup("ombres/Guo4.png"), strdup("ombres/Guo4.tif")));
-	tests.push_back(std::make_pair(strdup("ombres/Guo8.png"), strdup("ombres/Guo8.jpg")));
-	tests.push_back(std::make_pair(strdup("ombres/Guo1.png"), strdup("ombres/Guo1.tif")));
-	tests.push_back(std::make_pair(strdup("doudou_mask.jpg"), strdup("doudou.jpg")));
-	tests.push_back(std::make_pair(strdup("lolilol_mask.jpg"), strdup("lolilol.jpg")));
-	tests.push_back(std::make_pair(strdup("Alexandre/mask_85.png"), strdup("Alexandre/0085.jpg")));
-	tests.push_back(std::make_pair(strdup("Alexandre/mask_145.png"), strdup("Alexandre/0145.jpg")));
-	tests.push_back(std::make_pair(strdup("Alexandre/mask_175.png"), strdup("Alexandre/0175.jpg")));
-	tests.push_back(std::make_pair(strdup("Alexandre/mask_205.png"), strdup("Alexandre/0205.jpg")));
-	tests.push_back(std::make_pair(strdup("chairi.PNG"), strdup("chair.PNG")));
-	tests.push_back(std::make_pair(strdup("doggy_mask.jpg"), strdup("doggy.jpg")));
-	tests.push_back(std::make_pair(strdup("bw1mask.png"), strdup("bw1.png")));
-	tests.push_back(std::make_pair(strdup("argmask.png"), strdup("arg.jpg")));
 
 
 
@@ -67,15 +41,20 @@ int main(int argc, char* argv[])
 			img.copyTo(debug);
 			cv::imshow("Mask building", debug);
 			cvSetMouseCallback("Mask building", mouseEvent, 0);
+
 			cv::waitKey(0);
+
 			Tracking tr(cont);
 			tr.build_mask(img);
-			DR dr(tr.get_mask(), img, prefix/*, DR::INTENSITY*/);
+			auto mask = tr.get_mask();
+			// DR dr = DR(mask, img, prefix/*, DR::INTENSITY*/);
+			DR dr = DR(mask, img, prefix, DR::INTENSITY);
 			dr.inpaint();
 		}
 		else
 		{
-			DR dr(it->first, it->second, prefix/*, DR::INTENSITY*/);
+			// DR dr(it->first, it->second, prefix/*, DR::INTENSITY*/);
+			DR dr(it->first, it->second, prefix, DR::INTENSITY);
 			dr.inpaint();
 		}
 		cv::waitKey(0);

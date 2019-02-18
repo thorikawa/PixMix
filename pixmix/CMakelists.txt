@@ -6,10 +6,6 @@ project (PIXMIX)
 
 set(CMAKE_INCLUDE_DIRECTORIES_BEFORE "ON")
 
-include_directories("C:/Users/am237982/Desktop/cea/CEA/Alexandre/Dev/LcviExtern/2015.01.2/dynamic/opencv2.49/vc10/standard/include"
-"C:/Users/am237982/Desktop/cea/CEA/Alexandre/Dev/external_lib/OpenMP/include")
-
-
 #check here https://rix0r.nl/blog/2015/08/13/cmake-guide/
 
 # Recurse into subdirectories.

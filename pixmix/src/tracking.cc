@@ -108,7 +108,7 @@ void Tracking::selection_refinement(const std::vector<cv::Point>& hull)
 	// We want enough fingerprints to correctly segment the object.
 	hull_sampling(hull, multiply_contours_);
 
-	std::vector<std::vector<cv::Point>> cont(1);
+	std::vector<std::vector<cv::Point> > cont(1);
 	cont[0] = outline_;
 	cv::drawContours(mask_, cont, 0, cv::Scalar(255), -1);
 
@@ -400,7 +400,7 @@ void Tracking::build_mask(const cv::Mat& frame)
 	int largest_area=0;
     int largest_contour_index=0;
 
-    std::vector<std::vector<cv::Point>> contours; // Vector for storing contour
+    std::vector<std::vector<cv::Point> > contours; // Vector for storing contour
     std::vector<cv::Vec4i> hierarchy;
 
     findContours(mask_, contours, hierarchy,CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE );
