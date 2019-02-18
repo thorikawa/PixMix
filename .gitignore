@@ -57,3 +57,4 @@ build
 *.jpeg
 *.pdf
 *.txt
+!CMakeLists.txt
