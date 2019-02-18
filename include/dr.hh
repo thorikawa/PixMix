@@ -24,9 +24,9 @@ class DR
     };
 
     // Constructor with the input and the contour.
-    DR(char* mask, char* input, std::string& prefix, COPY_P cp = SIMPLE);
-    DR(cv::Mat& mask, cv::Mat& input, std::string& prefix, COPY_P cp = SIMPLE);
-    void inpaint();
+    DR(std::string& mask, std::string& input, COPY_P cp = SIMPLE);
+    DR(cv::Mat& mask, cv::Mat& input, COPY_P cp = SIMPLE);
+    cv::Mat inpaint();
 
   private:
 	void init();
@@ -49,7 +49,6 @@ class DR
     COPY_P cp_;
     cv::Mat mask_;
     cv::Mat input_;
-	std::string prefix_;
     size_t nb_iter_;
     size_t iter_;
     size_t max_scale_;
@@ -69,7 +68,6 @@ class DR
 
 	// FIXME: have a matrix for each pyramid.
     std::vector<std::list<cv::Point> > pyramid_target_pixels_;
-    cv::Mat res_;
 };
 
 #endif

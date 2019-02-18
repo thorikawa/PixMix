@@ -105,12 +105,11 @@ void DR::init()
 	//srand(0);
 }
 
-DR::DR(cv::Mat& mask, cv::Mat& input, std::string& prefix, COPY_P cp)
+DR::DR(cv::Mat& mask, cv::Mat& input, COPY_P cp)
   : cp_(cp),
 	// FIXME : Not sure if deepcopy.
     mask_(mask),
     input_(input),
-	prefix_(prefix),
     nb_iter_(5),
     iter_(5),
     max_scale_(4),
@@ -122,18 +121,16 @@ DR::DR(cv::Mat& mask, cv::Mat& input, std::string& prefix, COPY_P cp)
     pyramid_mask_(5),
     pyramid_cost_(5),
     pyramid_size_(5),
-    pyramid_target_pixels_(5),
-    res_(input_.size(), CV_8UC3)
+    pyramid_target_pixels_(5)
 {
 	init();
 }
 
 
-DR::DR(char* mask, char* input, std::string& prefix, COPY_P cp)
+DR::DR(std::string& mask, std::string& input, COPY_P cp)
 	: cp_(cp),
-	  prefix_(prefix),
-	  mask_(cv::imread(prefix + mask, CV_LOAD_IMAGE_GRAYSCALE)),
-	  input_(cv::imread(prefix + input)),
+	  mask_(cv::imread(mask, CV_LOAD_IMAGE_GRAYSCALE)),
+	  input_(cv::imread(input)),
 	  nb_iter_(5),
 	  iter_(5),
 	  max_scale_(4),
@@ -145,9 +142,7 @@ DR::DR(char* mask, char* input, std::string& prefix, COPY_P cp)
 	  pyramid_mask_(5),
 	  pyramid_cost_(5),
 	  pyramid_size_(5),
-      pyramid_target_pixels_(5),
-	  res_(input_.size(), CV_8UC3)
-
+      pyramid_target_pixels_(5)
 {
 	init();
 }
@@ -511,7 +506,7 @@ void DR::improve(cv::Point p, size_t cpt, double& cost)
     pyramid_cost_[scale_iter_].at<float>(p.x, p.y) = curr_cost;
 }
 
-void DR::inpaint()
+cv::Mat DR::inpaint()
 {
   // Compute the cost for every pixels.
   double cost = 0;
@@ -631,11 +626,11 @@ void DR::inpaint()
               lol.at<uchar>(it2->x, it2->y) = tmp;
           }
 
-          cv::imshow("scale", temp);
-          cv::imshow("cost", lol);
-          cv::waitKey(1);
+          // cv::imshow("scale", temp);
+          // cv::imshow("cost", lol);
+          // cv::waitKey(1);
       }
   }
-  res_ = pyramid_image_[0].clone();
-  cv::imwrite(prefix_ + std::string("res2.jpg"), res_);
+  cv::Mat res = pyramid_image_[0].clone();
+  return res;
 }

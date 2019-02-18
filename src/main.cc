@@ -1,5 +1,7 @@
 #include "dr.hh"
 #include "tracking.hh"
+#include "cmdline.h"
+#include <string>
 
 std::vector<cv::Point> cont;
 unsigned int k = 0;
@@ -21,46 +23,43 @@ void mouseEvent(int evt, int x, int y, int flags, void *param)
 
 int main(int argc, char* argv[])
 {
-	bool manual = false;
-	std::string prefix("/path/to/images/");
+	cmdline::parser p;
+	p.add<std::string>("input", 'i', "input image path", true);
+	p.add<std::string>("mask", 'm', "mask image path", false, "");
+	p.add<std::string>("output", 'o', "output image path", true);
+	p.parse_check(argc, argv);
 
 	std::list<std::pair<char*, char*> > tests;
-	tests.push_back(std::make_pair(strdup("mask.png"), strdup("input.png")));
-	//tests.push_back(std::make_pair(strdup("2mask.png"), strdup("2.png")));
-
-
-
-	std::list<std::pair<char*, char*> >::iterator it = tests.begin();
-	for (; it != tests.end(); ++it)
+	bool manual = p.get<std::string>("mask") == "";
+	cv::Mat m;
+	if (manual)
 	{
-		// 2D inpainting, with a binary mask.
+		img = cv::imread(p.get<std::string>("input"));
+		img.copyTo(debug);
+		// cv::imshow("Mask building", debug);
+		cvSetMouseCallback("Mask building", mouseEvent, 0);
 
-		if (manual)
-		{
-			img = cv::imread(prefix + it->second);
-			img.copyTo(debug);
-			cv::imshow("Mask building", debug);
-			cvSetMouseCallback("Mask building", mouseEvent, 0);
-
-			cv::waitKey(0);
-
-			Tracking tr(cont);
-			tr.build_mask(img);
-			auto mask = tr.get_mask();
-			// DR dr = DR(mask, img, prefix/*, DR::INTENSITY*/);
-			DR dr = DR(mask, img, prefix, DR::INTENSITY);
-			dr.inpaint();
-		}
-		else
-		{
-			// DR dr(it->first, it->second, prefix/*, DR::INTENSITY*/);
-			DR dr(it->first, it->second, prefix, DR::INTENSITY);
-			dr.inpaint();
-		}
 		cv::waitKey(0);
-		cont.clear();
-		cv::destroyAllWindows();
-	}
 
-  return 0;
+		Tracking tr(cont);
+		tr.build_mask(img);
+		auto mask = tr.get_mask();
+		// DR dr = DR(mask, img, prefix/*, DR::INTENSITY*/);
+		DR dr = DR(mask, img, DR::INTENSITY);
+		m = dr.inpaint();
+	}
+	else
+	{
+		auto mask = p.get<std::string>("mask");
+		auto img = p.get<std::string>("input");
+		DR dr(mask, img, DR::INTENSITY);
+		m = dr.inpaint();
+	}
+	cont.clear();
+
+	cv::imwrite(p.get<std::string>("output"), m);
+
+	// cv::destroyAllWindows();
+
+	return 0;
 }
