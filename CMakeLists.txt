@@ -4,6 +4,7 @@
 cmake_minimum_required (VERSION 2.8.11)
 project (PIXMIX)
 
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_DIRECTORIES_BEFORE "ON")
 
 #check here https://rix0r.nl/blog/2015/08/13/cmake-guide/
